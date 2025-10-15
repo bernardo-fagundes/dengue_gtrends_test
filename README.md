@@ -35,6 +35,7 @@ Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que
 ### Passos:
 
 1. Crie uma pasta chamada `imagens_gtrends` no mesmo diretório onde o script `teste_auto.py` está salvo.
+   
 **OBS: Ou utilize a pasta padrão disponibilizada no diretório.**
 2. Abra o **Google Trends** no seu navegador.  
 3. Tire screenshots pequenos e precisos de cada um dos elementos listados abaixo e salve-os na pasta `imagens_gtrends` com os nomes exatos:
