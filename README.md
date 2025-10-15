@@ -58,6 +58,7 @@ Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que
 - Mantenha o zoom do navegador em **100%**.  
 - A resolução da tela deve ser a **mesma** durante a captura e execução.  
 - Se o script não encontrar uma imagem, provavelmente a captura de tela é diferente do que está sendo exibido. Refazê-la costuma resolver.
+- A pasta `imagens_gtrends` disponibilizada no repositório está configurada para acessos em PT-BR. Caso a interface do GTrends esteja em outro idioma a automação falha.
 
 ---
 
