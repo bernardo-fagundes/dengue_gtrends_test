@@ -67,7 +67,10 @@ Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que
 
 1. Abra o **Google Trends**.  
 2. Busque pelo termo de interesse (ex: *“Inteligência Artificial”*).  
-3. Configure os filtros desejados (país, categoria, etc.).  
+3. Configure os filtros desejados (país, categoria, etc.).
+
+   [Build atual configurada apenas para o Estado do Espírito Santo, mas é possível editar `espirito_santo.png` e sua referência no script para a região desejada]
+   
 4. Clique no seletor de período (ex: “Últimos 12 meses”) e escolha **“Período personalizado”**.  
 5. Selecione um intervalo **anterior ao desejado** (ex: de `15/12/2023` a `20/12/2023` se a coleta começar em `01/01/2024`).  
    > Isso prepara a interface e evita que o Google Trends reajuste as datas automaticamente.  
@@ -104,15 +107,3 @@ python teste_auto.py
 O script será interrompido de forma segura.
 
 ---
-
-## 📚 Sumário
-
-- Automatizador de Coleta de Dados do Google Trends  
-  - Funcionalidades  
-  - 1. Pré-requisitos  
-  - 2. Configuração Inicial: As Imagens de Referência  
-    - Passos  
-  - 3. Como Usar  
-    - Etapa 1: Preparação Manual no Navegador  
-    - Etapa 2: Executando o Script  
-    - Para Parar o Script
