@@ -38,7 +38,7 @@ Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que
    
 **OBS: Ou utilize a pasta padrão disponibilizada neste repositório.**
 
-2. Abra o **Google Trends** no seu navegador.
+2. Abra o **Google Trends** no seu navegador. Busque pelo termo desejado e aplique eventuais filtros de localização*.
    
 3. Tire screenshots pequenos e precisos de cada um dos elementos listados abaixo e salve-os na pasta `imagens_gtrends` com os nomes exatos:
 
@@ -70,7 +70,7 @@ Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que
 2. Busque pelo termo de interesse (ex: *“Inteligência Artificial”*).  
 3. Configure os filtros desejados (país, categoria, etc.).
 
-   [Build atual configurada apenas para o Estado do Espírito Santo, mas é possível editar `espirito_santo.png` e sua referência no script para a região desejada]
+   *[Build atual configurada apenas para o Estado do Espírito Santo, mas é possível editar `espirito_santo.png` e sua referência no script para a região desejada]
    
 4. Clique no seletor de período (ex: “Últimos 12 meses”) e escolha **“Período personalizado”**.  
 5. Selecione um intervalo **anterior ao desejado** (ex: de `15/12/2023` a `20/12/2023` se a coleta começar em `01/01/2024`).  
