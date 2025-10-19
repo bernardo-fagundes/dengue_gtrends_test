@@ -1,110 +1,163 @@
 # Automatizador de Coleta de Dados do Google Trends
 
-Este script automatiza o processo de download de dados de séries temporais e de municípios do **Google Trends** para um período estendido.  
-Ele contorna a limitação da plataforma, que só exibe dados diários para intervalos curtos, dividindo o período total em segmentos semanais e baixando os relatórios de cada um.
+Este repositório reúne um **robô de automação** para baixar relatórios de séries temporais e por município do
+**Google Trends** em períodos longos. O script divide a linha do tempo em janelas semanais e faz o download de cada
+relatório individualmente, contornando a limitação da plataforma que só disponibiliza dados diários para intervalos
+reduzidos.
+
+> ✅ Ideal para pesquisadores, jornalistas de dados e equipes de vigilância epidemiológica que precisam manter séries
+> históricas atualizadas sem intervenção manual.
+
+## 🗂️ Sumário
+
+- [Funcionalidades](#-funcionalidades)
+- [Arquitetura do Projeto](#-arquitetura-do-projeto)
+- [Pré-requisitos](#-1-pré-requisitos)
+- [Configuração Inicial: Imagens de Referência](#-2-configuração-inicial-imagens-de-referência)
+- [Como Usar](#-3-como-usar)
+- [Boas Práticas e Limitações](#-boas-práticas-e-limitações)
+- [Solução de Problemas](#-solução-de-problemas)
+- [Licença](#-licença)
 
 ---
 
 ## 🧩 Funcionalidades
 
-- **Coleta Contínua:** Baixa dados para longos períodos (meses ou anos) de forma automática.  
-- **Configuração Interativa:** Pergunta ao usuário qual navegador está usando, o formato de data desejado e o período de coleta antes de iniciar.  
-- **Simulação Humana:** Utiliza pausas aleatórias para tornar a automação mais robusta e menos propensa a erros.  
-- **Robustez:** Tenta localizar os elementos visuais múltiplas vezes, rolando a página se necessário.
+- **Coleta contínua:** agenda downloads semana a semana para cobrir meses ou anos inteiros.
+- **Configuração interativa:** solicita navegador, formato de data e período desejado antes de iniciar.
+- **Simulação humana:** aplica pausas aleatórias e múltiplas tentativas para reduzir erros de detecção.
+- **Monitoramento de segurança:** oferece atalhos fáceis para encerrar a automação caso algo saia do esperado.
+
+---
+
+## 🏗️ Arquitetura do Projeto
+
+```
+.
+├── README.md              # Documentação e orientações gerais
+├── teste_auto.py          # Script principal de automação
+└── imagens_gtrends/       # Pacote com exemplos de imagens de referência
+```
+
+O script principal (`teste_auto.py`) usa `pyautogui`, `keyboard` e `opencv-python` para identificar elementos na tela do
+navegador e executar cliques/entradas de texto de forma automatizada. As imagens armazenadas em `imagens_gtrends/`
+servem de referência visual para localizar botões, campos de data e filtros no Google Trends.
 
 ---
 
 ## ⚙️ 1. Pré-requisitos
 
-Antes de executar, você precisa ter o **Python** instalado e as seguintes bibliotecas.  
-Instale-as com:
+Certifique-se de ter **Python 3.9+** instalado e execute o comando abaixo para instalar as dependências mínimas:
 
 ```bash
 pip install pyautogui keyboard opencv-python
 ```
 
+> 💡 Dica: utilize um ambiente virtual (`python -m venv .venv && source .venv/bin/activate`) para isolar as dependências
+> do projeto.
+
 A biblioteca `opencv-python` é necessária para a funcionalidade de reconhecimento de imagem do `pyautogui`.
 
 ---
 
-## 🖼️ 2. Configuração Inicial: As Imagens de Referência
+## 🖼️ 2. Configuração Inicial: Imagens de Referência
 
-A automação funciona reconhecendo imagens na tela.  
-Por isso, a etapa mais crucial é a **captura de tela dos botões e campos** que o script irá usar.
+A automação depende da detecção de elementos visuais na página. Portanto, a etapa mais importante é capturar ou ajustar
+as imagens de referência utilizadas pelo script.
 
-### Passos:
+### Passos
 
-1. Crie uma pasta chamada `imagens_gtrends` no mesmo diretório onde o script `teste_auto.py` está salvo.
-   
-**OBS: Ou utilize a pasta padrão disponibilizada neste repositório.**
-
-2. Abra o **Google Trends** no seu navegador. Busque pelo termo desejado e aplique eventuais filtros de localização*.
-   
-3. Tire screenshots pequenos e precisos de cada um dos elementos listados abaixo e salve-os na pasta `imagens_gtrends` com os nomes exatos:
+1. Certifique-se de que existe uma pasta chamada `imagens_gtrends` no mesmo diretório de `teste_auto.py`.
+   - Você pode reutilizar o conjunto fornecido neste repositório.
+2. Abra o **Google Trends**, pesquise o termo desejado e aplique filtros de localização quando necessário.
+3. Capture screenshots pequenas (o mais justas possível) dos elementos abaixo e salve-os na pasta `imagens_gtrends` com
+   os nomes listados:
 
 | Arquivo | Descrição |
-|----------|------------|
+|---------|-----------|
 | `1_botao_baixo_volume.png` | Botão de alternância "Baixo volume de pesquisa" |
 | `2_botao_download_tempo.png` | Ícone de download do gráfico "Interesse ao longo do tempo" |
 | `3_botao_download_mapa.png` | Ícone de download do mapa "Interesse por sub-região" |
-| `periodo_dropdown.png` | Botão que mostra o período atual (ex: "Últimos 12 meses") |
+| `periodo_dropdown.png` | Botão que mostra o período atual (ex.: "Últimos 12 meses") |
 | `periodo_personalizado.png` | Opção "Período personalizado" após abrir o seletor de datas |
 | `campo_data_inicio.png` | Campo com o rótulo "De" (data inicial) |
 | `campo_data_fim.png` | Campo com o rótulo "A" (data final) |
 | `botao_aplicar_periodo.png` | Botão "OK" ou "Aplicar" |
-| `espirito_santo.png` *(opcional)* | Screenshot do filtro de localização já aplicado (ex: "Espírito Santo") |
+| `espirito_santo.png` *(opcional)* | Screenshot do filtro de localização já aplicado |
 
-⚠️ **Importante:**
-- Mantenha o zoom do navegador em **100%**.  
-- A resolução da tela deve ser a **mesma** durante a captura e execução.  
-- Se o script não encontrar uma imagem, provavelmente a captura de tela é diferente do que está sendo exibido. Refazê-la costuma resolver.
-- A pasta `imagens_gtrends` disponibilizada no repositório está configurada para acessos em PT-BR. Caso a interface do GTrends esteja em outro idioma a automação falha.
+> ⚠️ **Importante**
+>
+> - Mantenha o zoom do navegador em **100%**.
+> - Utilize a mesma resolução de tela na captura e na execução.
+> - Se a interface do Google Trends estiver em outro idioma, capture novamente as imagens para o idioma correspondente.
 
 ---
 
 ## 🚀 3. Como Usar
 
-### Etapa 1: Preparação Manual no Navegador (Essencial!)
+### 3.1 Preparação Manual (obrigatória)
 
-1. Abra o **Google Trends**.  
-2. Busque pelo termo de interesse (ex: *“Inteligência Artificial”*).  
-3. Configure os filtros desejados (país, categoria, etc.).
+1. Abra o Google Trends.
+2. Realize a busca desejada (ex.: *"Dengue"*).
+3. Ajuste filtros como país, período ou categoria.
+   - A pasta padrão está preparada para o estado do Espírito Santo. Para outras regiões, substitua `espirito_santo.png` e
+     atualize a lógica no script.
+4. Abra o seletor de período e escolha **Período personalizado**.
+5. Selecione um intervalo **anterior** ao período final que deseja coletar (ex.: configure `15/12/2023` a `20/12/2023` se a
+   coleta começará em `01/01/2024`). Isso evita que o Google Trends reajuste datas automaticamente.
+6. Deixe a aba ativa para que o script assuma o controle.
 
-   *[Build atual configurada apenas para o Estado do Espírito Santo, mas é possível editar `espirito_santo.png` e sua referência no script para a região desejada]
-   
-4. Clique no seletor de período (ex: “Últimos 12 meses”) e escolha **“Período personalizado”**.  
-5. Selecione um intervalo **anterior ao desejado** (ex: de `15/12/2023` a `20/12/2023` se a coleta começar em `01/01/2024`).  
-   > Isso prepara a interface e evita que o Google Trends reajuste as datas automaticamente.  
-6. Deixe a página aberta — o script tomará o controle a partir daí.
+### 3.2 Execução
+
+1. Abra o terminal.
+2. Navegue até a pasta do projeto.
+3. Execute:
+
+   ```bash
+   python teste_auto.py
+   ```
+
+4. Responda às perguntas interativas:
+   - Uso do **Microsoft Edge** (`s`/`n`).
+   - Escolha do formato de data (`DD/MM/AAAA` ou `MM/DD/AAAA`).
+   - Datas inicial e final do período.
+5. Aguarde a contagem regressiva de 5 segundos e garanta que o navegador esteja em foco.
+6. Evite movimentar o mouse ou teclado durante a execução.
+
+### 3.3 Encerrando manualmente
+
+- Segure a tecla **CTRL** por 1 segundo; **ou**
+- Movimente o cursor para o canto superior esquerdo da tela.
+
+O script será interrompido com segurança.
+
+---
+
+## 📏 Boas Práticas e Limitações
+
+- A automação depende da estabilidade da interface do Google Trends. Mudanças visuais podem exigir novas capturas.
+- Utilize sempre a mesma configuração de idioma, zoom e resolução da tela.
+- Evite executar o script em ambientes com múltiplos monitores em resoluções diferentes.
+- O download simultâneo de grandes quantidades de dados pode ser bloqueado pelo Google. Considere espaçar execuções.
 
 ---
 
-### Etapa 2: Executando o Script
+## 🛠️ Solução de Problemas
 
-1. Abra o terminal ou prompt de comando.  
-2. Navegue até a pasta onde o script e a pasta `imagens_gtrends` estão salvos.  
-3. Execute o comando:
-
-```bash
-python teste_auto.py
-```
-
-4. O script fará algumas perguntas:
-   - Se usa o **Microsoft Edge**: responda `s` (sim) ou `n` (não).  
-   - Formato de data: escolha entre `DD/MM/AAAA` ou `MM/DD/AAAA`.  
-   - Período de coleta: insira as datas de início e fim no formato escolhido.  
-
-5. Após responder, haverá uma contagem regressiva de **5 segundos**.  
-   Clique na janela do navegador para garantir que ela esteja em foco.  
-6. **Não mexa no mouse ou teclado!** O script tomará o controle para realizar as tarefas.
+| Sintoma | Possível causa | Como resolver |
+|---------|----------------|----------------|
+| Script não encontra um botão | Screenshot desatualizado ou com zoom diferente | Refaça a captura com zoom 100% e salve novamente |
+| Mensagem de erro sobre bibliotecas | Dependências não instaladas | Execute `pip install pyautogui keyboard opencv-python` |
+| Download não começa | Aba do navegador fora de foco | Clique na aba antes do fim da contagem regressiva |
+| Automatização para em estado inesperado | Mudança na interface do Trends | Revise as imagens e ajuste os tempos de espera |
 
 ---
 
-### 🛑 Para Parar o Script
+## 📄 Licença
 
-- Segure a tecla **CTRL** por um segundo.  
-- **Ou** mova o cursor do mouse para o **canto superior esquerdo** da tela.  
-
-O script será interrompido de forma segura.
+Este projeto é distribuído sob a licença MIT. Consulte o arquivo [`LICENSE`](LICENSE) (quando disponível) para mais
+detalhes.
 
 ---
+
+💬 **Dúvidas ou sugestões?** Abra uma _issue_ ou envie uma mensagem. Ficaremos felizes em ajudar!
